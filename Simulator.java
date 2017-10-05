@@ -23,6 +23,9 @@ class Simulation{
     public double lambda;
     public double pP;    
     public double pK;
+    public double switchRate;
+    public double breakChance;
+    public double breakLength;
 
     public Params(String[] args) {
       Scanner s = null;
@@ -75,29 +78,13 @@ class Simulation{
 
   public Simulation(String[] args){
     this.events = new PriorityQueue<Event>();
+
     stats = new Statistic();
     params = new Params(args);
     timeNow = 0;  
     rnd.setSeed(params.seed);
-  }
 
-  private void generateShop(){
-    servers = new ArrayList<Server>();
-    queues = new ArrayList<Queue>();
-
-    if(params.numQueues == 1){
-      Queue q = new Queue();
-      queues.add(q);
-      for(int i = 0; i < params.numServers; i++){
-        servers.add(new Server(q));
-      }
-    }else{
-      for(int i = 0; i < params.numServers; i++){
-        Queue q = new Queue();
-        queues.add(q);
-        servers.add(newServer(q));
-      }
-    }
+    shop = new Shop(params.numServers, params.numQueues);
   }
 
   private double generateArrivalTime(){
@@ -135,15 +122,23 @@ class Simulation{
     if(this.timeNow > params.simTime){
       return null;
     }
-    //TODO - INSERT PARAMTERS return e.run();
+    e.run(shop);
   }
 
   public void run(){
     generateShop();
     schedule(firstEvents());
     while(!events.isEmpty()){
-      break;
-      //Add event checking logic.
+      Event e = this.events.poll();
+      if(e.happensBefore(params.simTime)){
+        Events[] newEvents = sim.handle(e);
+        if(newEvents != null){
+          this.events.addAll(Arrays.asList(newEvents));
+        }
+      }else{
+        break;
+      }
     }
+    System.out.println(stats);
   }
 }
