@@ -36,18 +36,42 @@ class Shop {
   }
 
   public Queue getRandomQueue() {
-    return queues.get(Simulation.random.nextInt(queues.size()));
+    return queues.get(Simulator.rnd.nextInt(queues.size()));
   }
 
   public Queue getShortestQueue() {
-    maxLength = 99999;
+    
+    int maxLength = 99999;
     Queue r  = null;
-    for(Queues q : queues){
+    for(Queue q : queues){
       if(maxLength > q.size()){
         maxLength = q.size();
         r = q;
       }
     }
     return r;
+  }
+
+  public int getCustomerPosition(Customer c){
+    for(Queue q : queues){
+      if(q.contains(c)){
+        return q.indexOf(c);
+        //return position
+      }
+    }
+    return 0;
+  }
+
+  public boolean changeQueue(Customer c){
+    if(getCustomerPosition(c) > getShortestQueue().size()){
+      return true;
+    }
+    return false;
+  }
+
+  public void removeAny(Customer c){
+    for(Queue q : queues){
+      q.remove(c);
+    }
   }
 }

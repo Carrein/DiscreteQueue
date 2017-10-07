@@ -1,7 +1,7 @@
 abstract class Event implements Comparable<Event>{
   private final double time;
 
-  public abstract Event[] run();
+  public abstract Event[] run(Shop shop);
 
   public Event(double time){
     this.time = time;
@@ -15,6 +15,7 @@ abstract class Event implements Comparable<Event>{
     return this.time < time;
   }
 
+  //Methods below are helpful for event debugging.
   @Override
   public int compareTo(Event e) {
     return (int)Math.signum(this.time - e.time);

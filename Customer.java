@@ -4,6 +4,7 @@ abstract class Customer{
   private final double serviceTime;
   private double timeStartedWaiting;
   private double waitingTime;
+
   private static int numOfCustomer = 0;
   private int id;
 
@@ -20,6 +21,8 @@ abstract class Customer{
   }
 
   public void stopWaitingAt(double now){
+    //startWaitingAt must be called before this.
+    assert this.timeStartedWaiting > 0;
     this.waitingTime = now - this.timeStartedWaiting;
   }
 
@@ -33,6 +36,7 @@ abstract class Customer{
 
   public abstract Queue joinQueue(Shop shop);
 
+  /*
   public Server findIdleServer(List<Server> servers) {
     for (Server server: servers) {
       if (server.isIdle()) {
@@ -40,7 +44,7 @@ abstract class Customer{
       }
     }
     return null;
-  }
+  }*/
 
   public String toString() {
     return "C" + id;

@@ -1,16 +1,14 @@
 import java.io.*;
 import java.util.*;
 
-class Simulation{
+class Simulator{
   private Shop shop;
   private Params params;
   private double timeNow;
 
-  public Statistics stats;
+  public Statistic stats;
   public static Random rnd = new Random();
 
-  private List<Server> servers;
-  private List<Queue> queues;
   private PriorityQueue<Event> events;
 
   //Parameter class.
@@ -23,9 +21,9 @@ class Simulation{
     public double lambda;
     public double pP;    
     public double pK;
-    public double switchRate;
+    public double switchTime;
     public double breakChance;
-    public double breakLength;
+    public double breakTime;
 
     public Params(String[] args) {
       Scanner s = null;
@@ -49,13 +47,13 @@ class Simulation{
         pK = s.nextDouble();
         switchTime = s.nextDouble();
         breakChance = s.nextDouble();
-        breakLength = s.nextDouble();
+        breakTime = s.nextDouble();
       } catch (FileNotFoundException ex) {
         System.err.println("Unable to open file " + args[0] + " " + ex + "\n");
-        timeToSimulate = 0;
+        simTime = 0;
       } catch (InputMismatchException ex) {
         System.err.println("Format error in input");
-        timeToSimulate = 0;
+        simTime = 0;
       }
     }
   }
@@ -76,7 +74,7 @@ class Simulation{
     }
   }
 
-  public Simulation(String[] args){
+  public Simulator(String[] args){
     this.events = new PriorityQueue<Event>();
 
     stats = new Statistic();
@@ -88,28 +86,87 @@ class Simulation{
   }
 
   private double generateArrivalTime(){
-    return -Math.log(random.nextDouble()) / params.lambda;    
+    return -Math.log(rnd.nextDouble()) / params.lambda;    
   }
 
   private double generateServiceTime(){
-    return -Math.log(random.nextDouble()) / params.mu;
+    return -Math.log(rnd.nextDouble()) / params.mu;
   }
 
+  private double generateBreakTime(){
+    return -Math.log(rnd.nextDouble()) / params.breakTime;
+  }
+
+  private double generateSwitchTime(){
+    return -Math.log(rnd.nextDouble()) / params.switchTime;
+  }
+
+  private double generatePioneer(){
+    return -Math.log(rnd.nextDouble()) / params.pP;
+  }
+
+  private double generateKiasu(){
+    return -Math.log(rnd.nextDouble()) / params.pK;
+  }
+
+  public Customer generateCustomer(){   
+    double dice = rnd.nextDouble();
+    if (dice < params.pP){
+      return new PioneerCustomer(generateServiceTime());
+    } else if (dice > 1-params.pK) {
+      return new KiasuCustomer(generateServiceTime());
+    }else{
+      return new TypicalCustomer(generateServiceTime());      
+    }
+  }
+
+  public boolean generatebreakChance(){
+    double dice = rnd.nextDouble();
+    if (dice > params.breakChance) {        
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  //Generates one of 3 kinds of customers.
   public Event generateArrival(){
     double timeAfter = generateArrivalTime();
-    //TODO - Add customer here can be kiasu or pionennr.
-    //TODO - return new ARRIVALEVENT here
+    Customer c = generateCustomer();
+    //Customer c = new TypicalCustomer(generateServiceTime());
+    return new ArrivalEvent(this, this.timeNow + timeAfter, c);
+    //TODO - Add customer here can be kiasu or pioneer.
   }
 
-  public generateDone(){
+  public Event generateDone(Customer c, Server s){
     //TODO DONEEVENT
+    double doneAt = this.timeNow + c.getServiceTime();
+    return new DoneEvent(this, doneAt, c, s);
+  }
+
+  public Event generateServe(Customer c, Server s){
+    return new ServeEvent(this, this.timeNow, c, s);
+  }
+
+  public Event generateBreak(Server s){
+    return new BreakEvent(this, this.timeNow, s);
+  }
+  
+  public Event generateResume(Server s){
+    double breakAt = this.timeNow + generateBreakTime();
+    return new ResumeEvent(this, breakAt, s);
+  }
+
+  public Event generateSwitch(Customer c){
+    double moveAt = this.timeNow + generateSwitchTime();
+    return new SwitchEvent(this, moveAt, c);
   }
 
   public void recordCustomerServed(double time){
     stats.addServingTime(time);
   }
 
-  public Event[] firstEvents(){
+  public Event[] firstEvents() {
     return new Event[] { generateArrival() };
   }
   
@@ -122,16 +179,16 @@ class Simulation{
     if(this.timeNow > params.simTime){
       return null;
     }
-    e.run(shop);
+    return e.run(shop);
   }
 
   public void run(){
-    generateShop();
     schedule(firstEvents());
     while(!events.isEmpty()){
       Event e = this.events.poll();
       if(e.happensBefore(params.simTime)){
-        Events[] newEvents = sim.handle(e);
+        Event[] newEvents = handle(e);
+        //e.log();
         if(newEvents != null){
           this.events.addAll(Arrays.asList(newEvents));
         }
