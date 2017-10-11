@@ -1,10 +1,12 @@
-class TypicalCustomer extends Customer{
+class TypicalCustomer extends Customer {
 
   /**
    * TypicalCustomer invokes parent class Customer's constructor to setup this
    * instance of TypicalCustomer.
+   * 
+   * @param time The time this event occurs.
    */
-  public TypicalCustomer(double time){
+  public TypicalCustomer(double time) {
     super(time);
   }
 

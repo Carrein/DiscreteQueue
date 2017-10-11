@@ -25,7 +25,7 @@ class ServeEvent extends Event {
    * served by a server.
    * 
    * @param  sim  The simulation that generates this event, this invokes the
-   * parent class's constructor.
+   *     parent class's constructor.
    * @param  time The time this event occurs.
    * @param  c The customer who is being served.
    * @param  s The server behind the serve event.
@@ -47,7 +47,7 @@ class ServeEvent extends Event {
   public Event[] run(Shop shop) {
     server.serve(customer);
     Event done = sim.generateDone(customer, this.server);
-    return new Event[] { done } ;
+    return new Event[] { done };
   }
 
   /**

@@ -1,10 +1,12 @@
-class KiasuCustomer extends Customer{
+class KiasuCustomer extends Customer {
 
   /**
    * KiasuCustomer invokes parent class Customer's constructor to setup this
    * instance of KiasuCustomer.
+   * 
+   * @param time The time this event occurs.
    */
-  public KiasuCustomer(double time){
+  public KiasuCustomer(double time) {
     super(time);
   }
 

@@ -1,10 +1,12 @@
-class PioneerCustomer extends Customer{
+class PioneerCustomer extends Customer {
 
   /**
    * PioneerCustomer invokes parent class Customer's constructor to setup this
    * instance of PioneerCustomer.
+   * 
+   * @param time The time this event occurs.
    */
-  public PioneerCustomer(double time){
+  public PioneerCustomer(double time) {
     super(time);
   } 
 

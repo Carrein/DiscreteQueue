@@ -17,11 +17,11 @@ class BreakEvent extends Event {
    * on break.
    * 
    * @param  sim  The simulation that generates this event, this invokes the
-   * parent class's constructor.
+   *     parent class's constructor.
    * @param  time The time this event occurs.
    * @param  s The server going on break.
    */
-  public BreakEvent(Simulator sim, double time, Server s){
+  public BreakEvent(Simulator sim, double time, Server s) {
     super(time);
     this.sim = sim;
     this.server = s;

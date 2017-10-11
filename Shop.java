@@ -86,11 +86,11 @@ class Shop {
    * @param c the customer whose position we want to know.
    * @return the index in a queue of the customer.
    */
-  public int getCustomerPosition(Customer c){
+  public int getCustomerPosition(Customer c) {
     //position is set to -1 as 0 is head of queue.
     int position = -1;
-    for(Queue q : queues){
-      if(q.contains(c)){
+    for (Queue q : queues) {
+      if (q.contains(c)) {
         position = q.indexOf(c);
       }
     }
@@ -104,7 +104,7 @@ class Shop {
    * @param c the customer who is looking to switching queue.
    * @return if there is a shorter queue for customer to join.
    */
-  public boolean changeQueue(Customer c){
+  public boolean changeQueue(Customer c) {
     return (getCustomerPosition(c) > getShortestQueue().size());
   }
 
@@ -113,8 +113,8 @@ class Shop {
    * 
    * @param c the customer to be removed.
    */
-  public void remove(Customer c){
-    for(Queue q : queues){
+  public void remove(Customer c) {
+    for (Queue q : queues) {
       q.remove(c);
     }
   }

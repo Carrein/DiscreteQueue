@@ -20,7 +20,7 @@ class ArrivalEvent extends Event {
    * arriving into the system.
    * 
    * @param  sim  The simulation that generates this event, this invokes the
-   * parent class's constructor.
+   *     parent class's constructor.
    * @param  time The time this event occurs.
    * @param  c The customer who arrives.
    */
@@ -45,13 +45,13 @@ class ArrivalEvent extends Event {
   public Event[] run(Shop shop) {
     Event arrival = this.sim.generateArrival();
     Server s = shop.findIdleServer();
-    if(s == null){
+    if (s == null) {
       //no empty servers - generate arrival and switch event.
       Queue q = this.customer.joinQueue(shop);
       this.customer.startWaitingAt(getTime());
       Event move = sim.generateSwitch(this.customer);
       return new Event[] { arrival, move };
-    }else{
+    } else {
       //empty servers - generate arrival and serve event.
       Event serve = this.sim.generateServe(this.customer, s);
       return new Event[] { arrival, serve };

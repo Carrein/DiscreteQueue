@@ -20,11 +20,11 @@ class SwitchEvent extends Event {
    * looking for a shorter queue. 
    * 
    * @param  sim  The simulation that generates this event, this invokes the
-   * parent class's constructor.
+   *     parent class's constructor.
    * @param  time The time this event occurs.
    * @param  c The customer who is looking to change queues.
    */
-  public SwitchEvent(Simulator sim, double time, Customer c){
+  public SwitchEvent(Simulator sim, double time, Customer c) {
     super(time);
     this.customer = c;
     this.sim = sim;
@@ -40,19 +40,19 @@ class SwitchEvent extends Event {
    *     serve this current customer.
    */
   @Override
-  public Event[] run(Shop shop){
+  public Event[] run(Shop shop) {
     //Checks if customer is not already a)out of the system, b)at head of queue.
-    if(shop.getCustomerPosition(this.customer) < 0){
+    if (shop.getCustomerPosition(this.customer) < 0) {
       return null;
     }
     Server s = shop.findIdleServer();
-    if(s != null){
+    if (s != null) {
       shop.remove(this.customer);
       customer.stopWaitingAt(getTime());
       Event serve = this.sim.generateServe(this.customer, s);
       return new Event[] { serve };
-    }else{
-      if(shop.changeQueue(this.customer)){
+    } else {
+      if (shop.changeQueue(this.customer)) {
         shop.remove(this.customer);   
         shop.getShortestQueue().add(this.customer);
       }
@@ -69,6 +69,6 @@ class SwitchEvent extends Event {
   @Override
   public String toString() {
     return super.toString() + " " + this.customer + 
-    " is looking for lanes to jump!";
+      " is looking for lanes to jump!";
   }
 }

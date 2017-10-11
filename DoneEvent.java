@@ -27,16 +27,16 @@ class DoneEvent extends Event {
    * a serve event.
    * 
    * @param  sim  The simulation that generates this event, this invokes the
-   * parent class's constructor.
+   *     parent class's constructor.
    * @param  time The time this event occurs.
    * @param  c The customer who was just served
    * @param  s The server completing the serve event.
    */
   public DoneEvent(Simulator sim, double time, Customer c, Server s) {
-  super(time);
-  this.sim = sim;
-  this.server = s;
-  this.customer = c;
+    super(time);
+    this.sim = sim;
+    this.server = s;
+    this.customer = c;
   }
 
   /**
@@ -48,12 +48,12 @@ class DoneEvent extends Event {
    *     queued, else serve queries next customer and a serve event is queued.
    */
   @Override
-  public Event[] run(Shop shop){
+  public Event[] run(Shop shop) {
     //record waiting time.
     sim.recordCustomerServed(customer.getWaitingTime());
     this.server.done();
     
-    if(sim.generateBreakChance()){
+    if (sim.generateBreakChance()) {
       Event rest = this.sim.generateBreak(server);
       return new Event[] { rest };
     } else {
@@ -62,7 +62,7 @@ class DoneEvent extends Event {
         c.stopWaitingAt(getTime());
         Event serve = sim.generateServe(c, this.server);
         return new Event[] { serve };
-      }else{
+      } else {
         return null;
       }
     }

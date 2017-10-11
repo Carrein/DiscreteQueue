@@ -2,7 +2,7 @@
  * Encapsulates information and logic related to a server in
  * the simulation.
  */
-class Server{
+class Server {
   /**
    * The customer queue this server gets its next customer from.
    */
@@ -19,7 +19,7 @@ class Server{
    * The number of servers created so far.
    */
   private static int numOfServers;
-   /**
+  /**
    * A toggle if serve goes on break.
    */
   private boolean onBreak;
@@ -28,9 +28,9 @@ class Server{
    * Create a server with a given customer queue to draw
    * customer from.
    * 
-   * @param customerQueue A queue of customer
+   * @param q A queue of customer
    */
-  public Server(Queue q){
+  public Server(Queue q) {
     this.myQueue = q;
     this.myCustomer = null;
     this.id = Server.numOfServers;
@@ -45,9 +45,9 @@ class Server{
    * 
    * @return The new customer to be served.
    */
-  public Customer getNextCustomer(){
+  public Customer getNextCustomer() {
     Customer customer = myQueue.next();
-    if(customer != null){
+    if (customer != null) {
       return customer;
     }
     return null;
@@ -58,14 +58,14 @@ class Server{
    * 
    * @param customer The customer to be served.
    */
-  public void serve(Customer customer){
+  public void serve(Customer customer) {
     this.myCustomer = customer;
   }
 
   /**
    * The server is done serving myCustomer.
    */
-  public void done(){
+  public void done() {
     this.myCustomer = null;
   }
 
@@ -92,7 +92,7 @@ class Server{
   public void backFromBreak() {
     this.onBreak = false;
   }
-  
+
   /**
    * Return a string representation of the current server.
    * @return The server id prefixed with "S" in string format.

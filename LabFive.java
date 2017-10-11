@@ -8,6 +8,11 @@
  * In this lab, we build a discrete event simulator that simulates a shop
  * with multiple servers, and either a single queue or mulitple queue.
  * The main method simply creates a simulator and runs it.
+ * 
+ * 1 mark for implementation of kiasu customer.
+ * 1 mark for implementation of pioneer customer.
+ * 1 mark for implementation of server breaks.
+ * 1 mark for implementation of switching events.
  */
 
 /**

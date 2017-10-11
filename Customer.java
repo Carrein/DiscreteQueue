@@ -5,7 +5,7 @@ import java.util.List;
  * constructor for subclasses PioneerCustomer, KiasuCustomer and
  * TypicalCustomer. Keeps track of waiting time and id.
  */
-abstract class Customer{
+abstract class Customer {
   /**
    * The service time required by this customer.
    */
@@ -38,7 +38,7 @@ abstract class Customer{
    * 
    * @param serviceTime The time required to serve this customer.
    */
-  public Customer(double serviceTime){
+  public Customer(double serviceTime) {
     this.serviceTime = serviceTime;
     this.waitingTime = 0;
     this.timeStartedWaiting = 0;
@@ -46,12 +46,12 @@ abstract class Customer{
     Customer.numOfCustomer++;
   }
 
-   /**
+  /**
    * Record the time this customer starts waiting.
    * 
    * @param time The time this customer starts waiting.
    */
-  public void startWaitingAt(double time){
+  public void startWaitingAt(double time) {
     this.timeStartedWaiting = time;
   }
 
@@ -60,7 +60,7 @@ abstract class Customer{
    * 
    * @param now The time the customer stops waiting.
    */
-  public void stopWaitingAt(double now){
+  public void stopWaitingAt(double now) {
     //startWaitingAt must be called before this!!
     assert this.timeStartedWaiting > 0;
     this.waitingTime = now - this.timeStartedWaiting;
@@ -71,7 +71,7 @@ abstract class Customer{
    * 
    * @return the time spent waiting.
    */
-  public double getWaitingTime(){
+  public double getWaitingTime() {
     return this.waitingTime;
   }
 
@@ -80,7 +80,7 @@ abstract class Customer{
    * 
    * @return the required service time.
    */
-  public double getServiceTime(){
+  public double getServiceTime() {
     return this.serviceTime;
   }
 

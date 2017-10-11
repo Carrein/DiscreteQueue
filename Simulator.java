@@ -13,7 +13,7 @@ import java.util.*;
  * both handles the actual system that is being simulated.</p>
  */
 
-class Simulator{
+class Simulator {
   /**
    * A shop encapsulates the states of the simulation (the 
    * servers and the queues).
@@ -43,6 +43,7 @@ class Simulator{
    * Params is a private container class for all configuration parameters
    * of this simulation.
    */
+
   private class Params {
     /**
      * The seed for random number generation.
@@ -71,11 +72,11 @@ class Simulator{
     /**
      * The probability of a pioneer customer arriving.
      */
-    public double pP;
+    public double pioneerChance;
     /**
      * The probability of a kiasu customer arriving.
      */   
-    public double pK;
+    public double kiasuChance;
     /**
      * The time between switch events (exponentially calculated).
      */
@@ -114,8 +115,8 @@ class Simulator{
         numQueues = s.nextInt();
         lambda = s.nextDouble();
         simTime = s.nextDouble();
-        pP = s.nextDouble();
-        pK = s.nextDouble();
+        pioneerChance = s.nextDouble();
+        kiasuChance = s.nextDouble();
         switchTime = s.nextDouble();
         breakChance = s.nextDouble();
         breakTime = s.nextDouble();
@@ -147,9 +148,9 @@ class Simulator{
      * Called to indicate that a customer has been served, after
      * waiting some time (can be 0) in a queue.
      * 
-     * @param howLong the time a customer spent waiting in the queue.
+     * @param time the time a customer spent waiting in the queue.
      */
-    public void addServingTime(double time){
+    public void addServingTime(double time) {
       totalTimeWaited += time;
       totalCustomerServed++;
     }
@@ -160,7 +161,7 @@ class Simulator{
      * @return A string with three numbers: the average waiting time, the
      *     number of customer served, and the number of customer lost.
      */
-    public String toString(){
+    public String toString() {
       return String.format("%.3f %d 0", totalTimeWaited / totalCustomerServed,
       totalCustomerServed);
     }
@@ -173,7 +174,7 @@ class Simulator{
    *     standard input.  Else, assume args[0] is the input filename, and
    *     read from that file.
    */
-  public Simulator(String[] args){
+  public Simulator(String[] args) {
     this.events = new PriorityQueue<Event>();
 
     stats = new Statistic();
@@ -188,9 +189,10 @@ class Simulator{
    * Helper method to generate a random value by passing a parameter to
    * a logarithm algorithm.
    * 
+   * @param rate Variable modifier for generated values.
    * @return a generated logarithmic value.
    */
-  private double exponentialValue(double rate){
+  private double exponentialValue(double rate) {
     return -Math.log(rnd.nextDouble()) / rate;
   }
 
@@ -200,7 +202,7 @@ class Simulator{
    * 
    * @return the randomly generated inter-arrival time.
    */
-  private double generateArrivalTime(){
+  private double generateArrivalTime() {
     return exponentialValue(params.lambda);
   }
 
@@ -210,7 +212,7 @@ class Simulator{
    * 
    * @return the randomly generated service time.
    */
-  private double generateServiceTime(){
+  private double generateServiceTime() {
     return exponentialValue(params.mu);
   }
 
@@ -220,7 +222,7 @@ class Simulator{
    * 
    * @return the randomly generated break time.
    */
-  private double generateBreakTime(){
+  private double generateBreakTime() {
     return exponentialValue(params.breakTime);
   }
 
@@ -230,7 +232,7 @@ class Simulator{
    *
    * @return the randomly generated time between switch events.
    */
-  private double generateSwitchTime(){
+  private double generateSwitchTime() {
     return exponentialValue(params.switchTime);
   }
 
@@ -242,12 +244,12 @@ class Simulator{
    * 
    * @return a customer of one of three types: Pioneer, Typical or Kiasu.
    */
-  public Customer generateCustomer(){   
+  public Customer generateCustomer() {   
     double dice = rnd.nextDouble();
     //yay tenary operators!
-    return (dice < params.pP) 
+    return (dice < params.pioneerChance) 
       ? new PioneerCustomer(generateServiceTime())
-      : (dice > 1-params.pK) 
+      : (dice > 1 - params.kiasuChance) 
       ? new KiasuCustomer(generateServiceTime())
       : new TypicalCustomer(generateServiceTime());
   }
@@ -260,7 +262,7 @@ class Simulator{
    * 
    * @return a customer of one of three types: Pioneer, Typical or Kiasu.
    */
-  public boolean generateBreakChance(){
+  public boolean generateBreakChance() {
     return (rnd.nextDouble() < params.breakChance);
   }
 
@@ -270,7 +272,7 @@ class Simulator{
    * 
    * @return the new arrival event.
    */
-  public Event generateArrival(){
+  public Event generateArrival() {
     //switching the below two lines will generate wildly different outputs!
     double timeAfter = generateArrivalTime();    
     Customer c = generateCustomer();  
@@ -286,7 +288,7 @@ class Simulator{
    * @param s the server who serves the custoner.
    * @return the new done event.
    */
-  public Event generateDone(Customer c, Server s){
+  public Event generateDone(Customer c, Server s) {
     double doneAt = this.timeNow + c.getServiceTime();
     return new DoneEvent(this, doneAt, c, s);
   }
@@ -299,7 +301,7 @@ class Simulator{
    * @param s the server serving the customer.
    * @return the new serve event.
    */
-  public Event generateServe(Customer c, Server s){
+  public Event generateServe(Customer c, Server s) {
     return new ServeEvent(this, this.timeNow, c, s);
   }
 
@@ -310,7 +312,7 @@ class Simulator{
    * @param s the server going for break.
    * @return the new break event.
    */
-  public Event generateBreak(Server s){
+  public Event generateBreak(Server s) {
     return new BreakEvent(this, this.timeNow, s);
   }
 
@@ -321,7 +323,7 @@ class Simulator{
    * @param s the server returning from break
    * @return the new resume event.
    */
-  public Event generateResume(Server s){
+  public Event generateResume(Server s) {
     double breakAt = this.timeNow + generateBreakTime();
     return new ResumeEvent(this, breakAt, s);
   }
@@ -334,7 +336,7 @@ class Simulator{
    * @param c the customer switching queues.
    * @return the new switch event.
    */ 
-  public Event generateSwitch(Customer c){
+  public Event generateSwitch(Customer c) {
     double moveAt = this.timeNow + generateSwitchTime();
     return new SwitchEvent(this, moveAt, c);
   }
@@ -344,7 +346,7 @@ class Simulator{
    *
    * @param time The time a customer spent waiting (could be 0)
    */
-  public void recordCustomerServed(double time){
+  public void recordCustomerServed(double time) {
     stats.addServingTime(time);
   }
 
@@ -377,9 +379,9 @@ class Simulator{
    * @return An array of new events created as a result of simulating this
    *     event.
    */
-  public Event[] handle(Event e){
+  public Event[] handle(Event e) {
     this.timeNow = e.getTime();
-    if(this.timeNow > params.simTime){
+    if (this.timeNow > params.simTime) {
       return null;
     }
     return e.run(shop);
@@ -391,17 +393,17 @@ class Simulator{
    * simulation expires(regulated by simTime). Finally, the simulator prints 
    * out the stats.
    */
-  public void run(){
+  public void run() {
     schedule(firstEvents());
-    while(!events.isEmpty()){
+    while (!events.isEmpty()) {
       Event e = this.events.poll();
-      if(e.happensBefore(params.simTime)){
+      if (e.happensBefore(params.simTime)) {
         Event[] newEvents = handle(e);
         //e.log();
-        if(newEvents != null){
+        if (newEvents != null) {
           this.events.addAll(Arrays.asList(newEvents));
         }
-      }else{
+      } else {
         break;
       }
     }

@@ -18,11 +18,11 @@ class ResumeEvent extends Event {
    * from break.
    * 
    * @param  sim  The simulation that generates this event, this invokes the
-   * parent class's constructor.
+   *     parent class's constructor.
    * @param  time The time this event occurs.
    * @param  s The server returning from break.
    */
-  public ResumeEvent(Simulator sim, double time, Server s){
+  public ResumeEvent(Simulator sim, double time, Server s) {
     super(time);
     this.sim = sim;
     this.server = s;
@@ -40,11 +40,11 @@ class ResumeEvent extends Event {
   public Event[] run(Shop shop) {
     this.server.backFromBreak();
     Customer c = this.server.getNextCustomer();
-    if(c != null){
+    if (c != null) {
       c.stopWaitingAt(getTime());
       Event serve = sim.generateServe(c, server);
       return new Event[] { serve };
-    }else{
+    } else {
       return null;
     }
   }

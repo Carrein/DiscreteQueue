@@ -6,7 +6,7 @@
  * simulated by the simulator.
  */
 
-abstract class Event implements Comparable<Event>{
+abstract class Event implements Comparable<Event> {
   /**
    * The time at which this event occurs.
    */
@@ -25,7 +25,7 @@ abstract class Event implements Comparable<Event>{
    * 
    * @param  time The time this event occurs in the simulation time line.
    */
-  public Event(double time){
+  public Event(double time) {
     this.time = time;
   }
 
@@ -60,6 +60,7 @@ abstract class Event implements Comparable<Event>{
   public int compareTo(Event e) {
     return (int)Math.signum(this.time - e.time);
   }
+
   /**
    * Return a string representation of this event, in time form.
    * 
@@ -69,6 +70,7 @@ abstract class Event implements Comparable<Event>{
   public String toString() {
     return String.format("%6.3f", this.time);
   }
+  
   /**
    * A utility function to log this event to standard output.
    * 
