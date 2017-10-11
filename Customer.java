@@ -10,20 +10,24 @@ abstract class Customer{
    * The service time required by this customer.
    */
   private final double serviceTime;
+
   /**
    * The time this customer start waiting in a queue.  0 if this customer
    * never joins a queue.
    */
   private double timeStartedWaiting;
+
   /**
    * The time this customer waited in a queue.  Only valid after stopWaitingAt()
    * is called.
    */
   private double waitingTime;
+
   /**
    * The total number of customer created so far.
    */
   private static int numOfCustomer = 0;
+  
   /**
    * The ID associated with this customer.
    */
