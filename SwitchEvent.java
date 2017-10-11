@@ -10,29 +10,29 @@ class SwitchEvent extends Event {
 
   @Override
   public Event[] run(Shop shop){
+    if(shop.getCustomerPosition(this.customer) < 0){
+      return null;
+    }
     Server s = shop.findIdleServer();
-    if(s == null){
-      //if no idle, check for shortest.
-      if(shop.changeQueue(customer)){
-        Queue q = shop.getShortestQueue();
-        shop.removeAny(customer);
-        q.add(customer);
-      }else{
-        return new Event[] {};
-        //return an empty event since,
-        //a) no move.
-        //b) or no such customer.
+    if(s != null){
+      shop.remove(this.customer);
+      customer.stopWaitingAt(getTime());
+      Event serve = this.sim.generateServe(this.customer, s);
+      return new Event[] { serve };
+    }else{
+      if(shop.changeQueue(this.customer)){
+        shop.remove(this.customer);   
+        shop.getShortestQueue().add(this.customer);
       }
       Event move = sim.generateSwitch(this.customer);
       return new Event[] { move };
-    }else{
-      Event serve = this.sim.generateServe(customer, s);
-      return new Event[] { serve };
     }
+    //Event move = sim.generateSwitch(this.customer);
+    //return new Event[] { move };
   }
 
   @Override
   public String toString() {
-    return super.toString() + " " + this.customer + " is changing queues!";
+    return super.toString() + " " + this.customer + " is looking for lanes to jump!";
   }
 }

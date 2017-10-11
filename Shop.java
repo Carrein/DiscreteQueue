@@ -40,36 +40,30 @@ class Shop {
   }
 
   public Queue getShortestQueue() {
-    
-    int maxLength = 99999;
-    Queue r  = null;
+    Queue shortest  = queues.get(0);
     for(Queue q : queues){
-      if(maxLength > q.size()){
-        maxLength = q.size();
-        r = q;
+      if(q.size() < shortest.size()){
+        shortest = q;
       }
     }
-    return r;
+    return shortest;
   }
 
   public int getCustomerPosition(Customer c){
+    int position = -1;
     for(Queue q : queues){
       if(q.contains(c)){
-        return q.indexOf(c);
-        //return position
+        position = q.indexOf(c);
       }
     }
-    return 0;
+    return position;
   }
 
   public boolean changeQueue(Customer c){
-    if(getCustomerPosition(c) > getShortestQueue().size()){
-      return true;
-    }
-    return false;
+    return (getCustomerPosition(c) > getShortestQueue().size());
   }
 
-  public void removeAny(Customer c){
+  public void remove(Customer c){
     for(Queue q : queues){
       q.remove(c);
     }

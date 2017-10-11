@@ -14,15 +14,20 @@ class DoneEvent extends Event {
 
   @Override
   public Event[] run(Shop shop){
-    sim.recordCustomerServed(customer.getWaitingTime());
-    //Record time regardless
-    if(sim.generatebreakChance()){
+    sim.recordCustomerServed(customer.getWaitingTime()); 
+    this.server.done();
+    if(sim.generateBreakChance()){
       Event rest = this.sim.generateBreak(server);
       return new Event[] { rest };
     }else{
-      this.server.done();
-      Event resume = this.sim.generateResume(server);
-      return new Event[] { resume };
+      Customer c = this.server.getNextCustomer();
+      if (c != null) {
+        c.stopWaitingAt(getTime());
+        Event serve = sim.generateServe(c, this.server);
+        return new Event[] { serve };
+      }else{
+        return null;
+      }
     }
   }
 

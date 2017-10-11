@@ -10,9 +10,9 @@ class BreakEvent extends Event {
 
   @Override
   public Event[] run(Shop shop) {
+    this.server.goForBreak();
     Event resume = sim.generateResume(server);
     return new Event [] { resume };
-    //set a new resume event
   }
 
   @Override

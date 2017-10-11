@@ -10,7 +10,8 @@ class ResumeEvent extends Event {
 
   @Override
   public Event[] run(Shop shop) {
-    this.server.done();
+    //if this event is activated, it means break time's over boys!
+    this.server.backFromBreak();
     Customer c = this.server.getNextCustomer();
     if(c != null){
       c.stopWaitingAt(getTime());
@@ -23,6 +24,6 @@ class ResumeEvent extends Event {
 
   @Override
   public String toString() {
-    return super.toString() + " " + this.server + " is returning from a break!";
+    return super.toString() + " " + this.server + " is returning from a break.";
   }
 }

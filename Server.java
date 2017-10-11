@@ -3,12 +3,14 @@ class Server{
   private Customer myCustomer;
   private int id;
   private static int numOfServers;
+  private boolean onBreak;
 
   //Constructor.
   public Server(Queue q){
     this.myQueue = q;
     this.myCustomer = null;
     this.id = Server.numOfServers;
+    this.onBreak = false;
     Server.numOfServers++;
   }
   //polls next customer from Server's own queue.
@@ -28,8 +30,19 @@ class Server{
     this.myCustomer = null;
   }
   //Check if server is serving anyone.
-  public boolean isIdle(){
-    return (this.myCustomer == null);
+  public boolean isIdle() {
+    return (this.myCustomer == null) && !onBreak;
+  }
+
+  public void goForBreak() {
+    this.onBreak = true;
+  }
+  
+  /**
+   * The server comes back from break.
+   */
+  public void backFromBreak() {
+    this.onBreak = false;
   }
 
   public String toString() {
