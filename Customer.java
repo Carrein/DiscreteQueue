@@ -92,7 +92,7 @@ abstract class Customer{
   /**
    * Return a string representation of this customer.
    * 
-   * @return The id of the customer prefixed with "C" as a stirng.
+   * @return The id of the customer prefixed with "C" as a string.
    */
   public String toString() {
     return "C" + id;
