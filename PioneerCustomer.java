@@ -1,5 +1,9 @@
 class PioneerCustomer extends Customer{
 
+  /**
+   * PioneerCustomer invokes parent class Customer's constructor to setup this
+   * instance of PioneerCustomer.
+   */
   public PioneerCustomer(double time){
     super(time);
   } 
@@ -18,7 +22,7 @@ class PioneerCustomer extends Customer{
     q.bump(this);
     return q;
   }
-  
+
   /**
    * Return a string representation of this customer.
    * 
